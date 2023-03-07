@@ -2,9 +2,10 @@
 
 namespace RS\ChronopostApi;
 
+use SoapClient;
 abstract class Client {
 
-    
+    const WSDL_SHIPPING_SERVICE = "https://ws.chronopost.fr/shipping-cxf/ShippingServiceWS?wsdl";
     const WSDL_TRACKING_SERVICE = "https://ws.chronopost.fr/tracking-cxf/TrackingServiceWS?wsdl";
     const WSDL_POINT_RELAIS_SERVICE = "https://ws.chronopost.fr/recherchebt-ws-cxf/PointRelaisServiceWS?wsdl";
     const WSDL_CRENEAU_SERVICE = "https://ws.chronopost.fr/rdv-cxf/services/CreneauServiceWS?wsdl";
@@ -16,11 +17,12 @@ abstract class Client {
             private string $wsdl,
             private array $options = []
         ) {
+            $this->init();
         }
 
         public function init()
         {
-            $this->client = new SoapClient();
+            $this->client = new SoapClient($this->wsdl, $this->options);
         }
 
         public function connect()

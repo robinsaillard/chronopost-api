@@ -1,11 +1,14 @@
 <?php
 
+namespace RS\ChronopostApi\Wsdl;
+
+use DateTime;
 use RS\ChronopostApi\Client;
+
 
 class TrackingServiceWS extends Client {
 
-    const WSDL_SHIPPING_SERVICE = "https://ws.chronopost.fr/shipping-cxf/ShippingServiceWS?wsdl";
-
+    const WSDL_TRACKING_SERVICE = "https://ws.chronopost.fr/tracking-cxf/TrackingServiceWS?wsdl";
     public function __construct(
         private array $esdValue = [],
         private array $headerValue = [],
@@ -15,6 +18,7 @@ class TrackingServiceWS extends Client {
         private array $refValue = [],
         private array $skybillValue = [],
         private array $skybillParamsValue = [],
+        private array $appointmentValue = [],
         private string $password = "",
         private string $version = "2.0",
         private string $modeRetour = "",
@@ -22,37 +26,16 @@ class TrackingServiceWS extends Client {
         private ?string $multiParcel = null,
         private array $scheduledValue = []
     ) {
-        parent::construct(WSDL_SHIPPING_SERVICE);
+        parent::__construct(SELF::WSDL_TRACKING_SERVICE);
     }
-
-    public function getShippingInfo($shippingNumber) {
-        $params = [
-            'shippingNumber' => $shippingNumber
-        ];
-        return $this->client->getShippingInfo($params);
-    }
-
-    public function getReservedSkybill($skybillNumber) {
-        $params = [
-            'skybillNumber' => $skybillNumber
-        ];
-        return $this->client->getReservedSkybill($params);
-    }
-
-    public function getReservedSkybillWithType($skybillNumber, $skybillType) {
-        $params = [
-            'skybillNumber' => $skybillNumber,
-            'skybillType' => $skybillType
-        ];
-        return $this->client->getReservedSkybillWithType($params);
-    }
-
 
     /**
+     * @method setHeaderValue
      * @param int $accountNumber Numéro de compte contractualisé avec chronopost
      * @param ?int $subAccount Numéro de sous compte (optionnel)
      * @param ?string $identWebPro Identifiant webpro (optionnel)
      * @param ?string $idEmit Valeur fixe : CHRFR  (optionnel)
+     * @return self
      */
     public function setHeaderValue(int $accountNumber, int $subAccount = null,  string $identWebPro = "", string $idEmit = "CHRFR") : self
     {
@@ -82,8 +65,8 @@ class TrackingServiceWS extends Client {
      * @param ?string $numColReq Numéro de la collecte
      * */
     public function setEsdValue(
-        Datetime $closingDateTime, string $refEsdClient, float $height, float $length, float $width,
-        Datetime $retrievalDateTime, string $shipperBuildingFloor, string $shipperCarriesCode,
+        DateTime $closingDateTime, string $refEsdClient, float $height, float $length, float $width,
+        DateTime $retrievalDateTime, string $shipperBuildingFloor, string $shipperCarriesCode,
         string $shipperServiceDirection, string $specificInstructions, bool $ltAImprimerParChronopost = 0,
         int $nombreDePassageMaximum = 1, string $codeDepotColReq = "", string $numColReq = "") : self
     {
@@ -203,31 +186,79 @@ class TrackingServiceWS extends Client {
     }
 
     /**
+     * @method setRecipientValue
+     * @param string $recipientAdress1 Adresse du destinataire
+     * @param ?string $recipientAdress2 Complément d’adresse du destinataire (optionnel)
+     * @param string $recipientCity Ville du destinataire
+     * @param string $recipientCivility Civilité du destinataire (E : Madame |L : Mademoiselle |M : Monsieur)
+     * @param ?string $recipientContactName Nom du destinataire (obligatoire si ESD)
+     * @param string $recipientCountry Code pays du destinataire
+     * @param ?string $recipientCountryName Nom du pays du destinataire
+     * @param string $recipientEmail Email du destinataire
+     * @param ?string $recipientMobilePhone Mobile du destinataire
+     * @param string $recipientName Nom du destinataire
+     * @param ?string $recipientName2 Complément de nom du destinataire (optionnel)
+     * @param string $recipientPhone Phone du destinataire
+     * @param ?int $recipientPreAlert Pre-alerte du destinataire (optionnel)
+     * @param string $recipientZipCode Code postal du destinataire
+     * @param string $recipientType Type de destinataire (0 : particulier | 1 : professionnel)
+     * @return self
+     */
+    public function setRecipientValue(
+        string $recipientAdress1, string $recipientCity, string $recipientCivility, string $recipientCountry,
+        string $recipientEmail, string $recipientName, string $recipientPhone, string $recipientZipCode,
+        string $recipientAdress2 = "", string $recipientContactName = "", string $recipientCountryName = "",
+        string $recipientMobilePhone = "", string $recipientName2 = "", int $recipientPreAlert = 0,
+        string $recipientType = "0") : self
+    {
+        $this->recipientValue = [
+            'recipientAdress1' => $recipientAdress1,
+            'recipientAdress2' => $recipientAdress2,
+            'recipientCity' => $recipientCity,
+            'recipientCivility' => $recipientCivility,
+            'recipientContactName' => $recipientContactName,
+            'recipientCountry' => $recipientCountry,
+            'recipientCountryName' => $recipientCountryName,
+            'recipientEmail' => $recipientEmail,
+            'recipientMobilePhone' => $recipientMobilePhone,
+            'recipientName' => $recipientName,
+            'recipientName2' => $recipientName2,
+            'recipientPhone' => $recipientPhone,
+            'recipientPreAlert' => $recipientPreAlert,
+            'recipientType' => $recipientType,
+            'recipientZipCode' => $recipientZipCode
+        ];
+        return $this;
+    }
+
+
+    /**
      * @param string $customerSkybillNumber Numéro de colis client, tronqué à 15 caractères
      * @param string $PCardTransactionNumber Numéro de transaction PCard (réserver à Chronopost)
      * @param string $recipientRef Référence du destinataire
      * @param string $shipperRef Référence de l’expéditeur
      * @param string $idRelais Identifiant du relais (uniquement si point relais)
-     * @return array refValue
+     * @return self
      */
     public function setRefValue(
-        string $customerSkybillNumber = "", string $PCardTransactionNumber = "", string $recipientRef = "",
-        string $shipperRef = "", string $idRelais = "")
+        string $customerSkybillNumber = "", string $recipientRef = "",
+        string $shipperRef = "", string $idRelais = "") : self
     {
         if (strlen($customerSkybillNumber) > 15)
             $customerSkybillNumber = substr($customerSkybillNumber, 0, 15);
-        $result = []; 
+        $result = [
+            "PCardTransactionNumber"
+        ]; 
         if ($customerSkybillNumber != "")
             $result['customerSkybillNumber'] = $customerSkybillNumber;
-        if ($PCardTransactionNumber != "")
-            $result['PCardTransactionNumber'] = $PCardTransactionNumber;
         if ($recipientRef != "")
             $result['recipientRef'] = $recipientRef;
         if ($shipperRef != "")
             $result['shipperRef'] = $shipperRef;
         if ($idRelais != "")
             $result['idRelais'] = $idRelais;
-        return $result;
+        $this->refValue = $result;
+        return $this;
     }
 
     /**
@@ -260,16 +291,17 @@ class TrackingServiceWS extends Client {
      * @param ?string $subAccount Numéro de sous-compte (optionnel)
      * @param ?string $toTheOrderOf Ordre du chèque pour un contre remboursement (optionnel)
      * @param ?string $alternateProductCode Code produit alternatif (optionnel)
+     * @return self
      */
 
     public function setSkybillValue(
-        int $bulkNumber = 1, string $evtCode = "DC", string $productCode = "01", DateTime $shipDate, int $shipHour,
+        string $bulkNumber = "1", string $evtCode = "DC", string $productCode = "01", DateTime $shipDate, int $shipHour,
         float $weight, string $weightUnit = "KGM", float $height, float $length, float $width,
         string $codCurrency = "", int $codValue = 0, string $content1 = "", string $content2 = "", string $content3 = "",
         string $content4 = "", string $content5 = "", string $customsCurrency = "", int $customsValue = 0,
         string $insuredCurrency = "", int $insuredValue = 0, string $masterSkybillNumber = "", string $objectType = "",
         string $service = "", string $skybillRank = "", string $as = "", string $subAccount = "",
-        string $toTheOrderOf = "", string $alternateProductCode = "") {
+        string $toTheOrderOf = "", string $alternateProductCode = "") :self {
             $result = [
                 'bulkNumber' => $bulkNumber,
                 'evtCode' => $evtCode,
@@ -339,9 +371,9 @@ class TrackingServiceWS extends Client {
          * @param string $skybillParamsValue [PDF|PPR|SPD|THE|Z 2 D|JSON|ZPL|SLT|XML|THEPSG|Z 2 DPSG]
          * @param ?string $duplicata [Y|N] Impression d’une LT avec un duplicata (sans code à barre)
          * @param ?int $withReservation [0|1|2] 0 par défaut, sans réservation 1 avec réservation 2 avec réservation et le premier 2 format de la LT spécifiée dans mode
-         * @return array skybillParamsValue
+         * @return self
          */
-        public function setSkybillParamsValue(string $skybillParamsValue = "PDF", string $duplicata = "N", int $withReservation = 0) {
+        public function setSkybillParamsValue(string $skybillParamsValue = "PDF", string $duplicata = "N", int $withReservation = 0) : self {
             $result = [
                 'skybillParamsValue' => $skybillParamsValue,
                 'duplicata' => $duplicata,
@@ -358,9 +390,9 @@ class TrackingServiceWS extends Client {
          * @param int $numberOfParcel Nombre de colis
          * @param ?string $version (2)
          * @param ?string $multiParcel (N) [Y|N] Expédition multi colis
-         * @return array general
+         * @return self
          */
-        public function general(string $password, string $modeRetour = "1", int $numberOfParcel = 1, string $version = "2", string $multiParcel = "N") {
+        public function setGeneral(string $password, string $modeRetour = "1", int $numberOfParcel = 1, string $version = "2", string $multiParcel = "N") {
             $this->password = $password;
             $this->modeRetour = $modeRetour;
             $this->numberOfParcel = $numberOfParcel;
