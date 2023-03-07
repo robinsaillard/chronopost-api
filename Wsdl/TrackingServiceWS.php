@@ -247,7 +247,7 @@ class TrackingServiceWS extends Client {
         if (strlen($customerSkybillNumber) > 15)
             $customerSkybillNumber = substr($customerSkybillNumber, 0, 15);
         $result = [
-            "PCardTransactionNumber"
+            "PCardTransactionNumber" => null
         ]; 
         if ($customerSkybillNumber != "")
             $result['customerSkybillNumber'] = $customerSkybillNumber;
@@ -313,16 +313,16 @@ class TrackingServiceWS extends Client {
                 'height' => $height,
                 'length' => $length,
                 'width' => $width,
-                'latitude',
-                'longitude',
-                'portCurrency',
-                'portValue',
-                'qualite',
-                'source',
-                'carrier',
-                'skybillNumber',
-                'skybillBackNumber',
-                'labelNumber',
+                'latitude' => null,
+                'longitude' => null,
+                'portCurrency' => null,
+                'portValue' => null,
+                'qualite' => null,
+                'source' => null,
+                'carrier' => null,
+                'skybillNumber' => null,
+                'skybillBackNumber' => null,
+                'labelNumber' => null,
 
             ];
             if ($codCurrency != "")
