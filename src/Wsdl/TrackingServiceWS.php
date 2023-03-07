@@ -67,7 +67,7 @@ class TrackingServiceWS extends Client {
     public function setEsdValue(
         DateTime $closingDateTime, string $refEsdClient, float $height, float $length, float $width,
         DateTime $retrievalDateTime, string $shipperBuildingFloor, string $shipperCarriesCode,
-        string $shipperServiceDirection, string $specificInstructions, bool $ltAImprimerParChronopost = 0,
+        string $shipperServiceDirection, string $specificInstructions, bool $ltAImprimerParChronopost = false,
         int $nombreDePassageMaximum = 1, string $codeDepotColReq = "", string $numColReq = "") : self
     {
         $result = [
