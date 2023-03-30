@@ -2,13 +2,16 @@
 
 namespace RS\ChronopostApi\Wsdl;
 
+use SoapClient;
 use DateTime;
 use RS\ChronopostApi\Client;
 
 
+
 class TrackingServiceWS extends Client {
 
-    const WSDL_TRACKING_SERVICE = "https://ws.chronopost.fr/tracking-cxf/TrackingServiceWS?wsdl";
+    const WSDL_TRACKING_SERVICE = "https://ws.chronopost.fr/shipping-cxf/ShippingServiceWS?wsdl";
+
     public function __construct(
         private array $esdValue = [],
         private array $headerValue = [],
@@ -26,7 +29,7 @@ class TrackingServiceWS extends Client {
         private ?string $multiParcel = null,
         private array $scheduledValue = []
     ) {
-        parent::__construct(SELF::WSDL_TRACKING_SERVICE);
+        parent::__construct(self::WSDL_TRACKING_SERVICE);
     }
 
     /**
@@ -296,7 +299,7 @@ class TrackingServiceWS extends Client {
 
     public function setSkybillValue(
         string $bulkNumber = "1", string $evtCode = "DC", string $productCode = "01", DateTime $shipDate, int $shipHour,
-        float $weight, string $weightUnit = "KGM", float $height, float $length, float $width,
+        float $weight, string $weightUnit = "KGM", float $height = 0.0, float $length = 0.0, float $width = 0.0,
         string $codCurrency = "", int $codValue = 0, string $content1 = "", string $content2 = "", string $content3 = "",
         string $content4 = "", string $content5 = "", string $customsCurrency = "", int $customsValue = 0,
         string $insuredCurrency = "", int $insuredValue = 0, string $masterSkybillNumber = "", string $objectType = "",
@@ -310,9 +313,9 @@ class TrackingServiceWS extends Client {
                 'shipHour' => $shipHour,
                 'weight' => $weight,
                 'weightUnit' => $weightUnit,
-                'height' => $height,
-                'length' => $length,
-                'width' => $width,
+                'height' => 0,
+                'length' => 0,
+                'width' => 0,
                 'latitude' => null,
                 'longitude' => null,
                 'portCurrency' => null,
@@ -373,9 +376,9 @@ class TrackingServiceWS extends Client {
          * @param ?int $withReservation [0|1|2] 0 par défaut, sans réservation 1 avec réservation 2 avec réservation et le premier 2 format de la LT spécifiée dans mode
          * @return self
          */
-        public function setSkybillParamsValue(string $skybillParamsValue = "PDF", string $duplicata = "N", int $withReservation = 0) : self {
+        public function setSkybillParamsValue(string $mode = "PDF", string $duplicata = "N", int $withReservation = 0) : self {
             $result = [
-                'skybillParamsValue' => $skybillParamsValue,
+                'mode' => $mode,
                 'duplicata' => $duplicata,
                 'withReservation' => $withReservation,
             ];
@@ -408,7 +411,7 @@ class TrackingServiceWS extends Client {
          * @param DateTime $sellByDate Date limite de consommation
          * @return array scheduledValue
          */
-        public function setScheduledValue(array $appointmentValue, DateTime $expirationDate, DateTime $sellByDate) {
+        public function setScheduledValue(DateTime $expirationDate, DateTime $sellByDate) {
             $result = [
                 'appointmentValue' => $this->appointmentValue,
                 'expirationDate' => $expirationDate->format('Y-m-d'),
@@ -438,25 +441,71 @@ class TrackingServiceWS extends Client {
 
         /**
          * shippingMultiParcelV4
-         * @return array shippingMultiParcelV4
+         * @return object shippingMultiParcelV4
          */
-        public function shippingMultiParcelV4() {
-            $result = [
-                'esdValue' => $this->esdValue,
-                'headerValue' => $this->headerValue,
-                'shipperValue' => $this->shipperValue,
-                'customerValue' => $this->customerValue,
-                'recipientValue' => $this->recipientValue,
-                'refValue' => $this->refValue,
-                'skybillValue' => $this->skybillValue,
-                'skybillParamsValue' => $this->skybillParamsValue,
-                'password' => $this->password,
-                'version' => $this->version,
-                'modeRetour' => $this->modeRetour,
-                'numberOfParcel' => $this->numberOfParcel,
-                'multiParcel' => $this->multiParcel,
-                'scheduledValue' => $this->scheduledValue,
-            ];
-            return $result;
+        public function shippingMultiParcelV4() :object {
+            $result = [];
+            if (!empty($this->esdValue)) {
+                $result['esdValue'] = $this->esdValue;
+            }
+            if (!empty($this->headerValue)) {
+                $result['headerValue'] = $this->headerValue;
+            }
+            if (!empty($this->shipperValue)) {
+                $result['shipperValue'] = $this->shipperValue;
+            }
+            if (!empty($this->customerValue)) {
+                $result['customerValue'] = $this->customerValue;
+            }
+            if (!empty($this->recipientValue)) {
+                $result['recipientValue'] = $this->recipientValue;
+            }
+            if (!empty($this->refValue)) {
+                $result['refValue'] = [$this->refValue, $this->refValue];
+            }
+            if (!empty($this->skybillValue)) {
+                $result['skybillValue'] = [$this->skybillValue, $this->skybillValue];
+            }
+            if (!empty($this->skybillParamsValue)) {
+                $result['skybillParamsValue'] = $this->skybillParamsValue;
+            }
+            if (!empty($this->password)) {
+                $result['password'] = $this->password;
+            }
+            if (!empty($this->version)) {
+                $result['version'] = $this->version;
+            }
+            if (!empty($this->modeRetour)) {
+                $result['modeRetour'] = $this->modeRetour;
+            }
+            if (!empty($this->numberOfParcel)) {
+                $result['numberOfParcel'] = $this->numberOfParcel;
+            }
+            if (!empty($this->multiParcel)) {
+                $result['multiParcel'] = $this->multiParcel;
+            }
+            if (!empty($this->scheduledValue)) {
+                $result['scheduledValue'] = $this->scheduledValue;
+            }
+            // var_export($result);die;
+            // $result = array ( 
+            //     'headerValue' => array ( 'accountNumber' => 19869502, 'idEmit' => 'CHRFR', 'identWebPro' => '', 'subAccount' => NULL, ), 
+            //     'shipperValue' => array ( 'shipperAdress1' => '13 Allée de cindais', 'shipperAdress2' => '', 'shipperCity' => 'Saint André Sur Orne', 'shipperCivility' => 'M', 'shipperContactName' => '', 'shipperCountry' => 'FR', 'shipperCountryName' => '', 'shipperEmail' => 'afrancoise@capska.fr', 'shipperMobilePhone' => '', 'shipperName' => 'Arnaud Françoise', 'shipperName2' => '', 'shipperPhone' => '0231532070', 'shipperPreAlert' => 0, 'shipperType' => '1', 'shipperZipCode' => '14320', ), 
+            //     'customerValue' => array ( 'customerAdress1' => '22B rue du bout guesdon', 'customerAdress2' => '0', 'customerCity' => 'Ifs', 'customerCivility' => 'M', 'customerContactName' => '', 'customerCountry' => 'FR', 'customerCountryName' => '', 'customerEmail' => 'robin.saillard@hotmail.fr', 'customerMobilePhone' => '', 'customerName' => 'Robin Saillard', 'customerName2' => '', 'customerPhone' => '0624506933', 'customerPreAlert' => 0, 'customerZipCode' => '14123', 'printAsSender' => 'N', ), 
+            //     'recipientValue' => array ( 'recipientAdress1' => '22B rue du bout guesdon', 'recipientAdress2' => '', 'recipientCity' => 'Ifs', 'recipientCivility' => 'M', 'recipientContactName' => '', 'recipientCountry' => 'FR', 'recipientCountryName' => '', 'recipientEmail' => 'robin.saillard@hotmail.fr', 'recipientMobilePhone' => '', 'recipientName' => 'Robin Saillard', 'recipientName2' => '', 'recipientPhone' => '0624506933', 'recipientPreAlert' => 0, 'recipientType' => '2', 'recipientZipCode' => '14123', ), 
+            //     'refValue' => array (
+            //         0 => array ( 'PCardTransactionNumber' => NULL, 'customerSkybillNumber' => 'TEST-COLIS-1', 'recipientRef' => 'TEST-COLIS-1', 'shipperRef' => 'TEST-COLIS-1', ), 
+            //         1 => array ( 'PCardTransactionNumber' => NULL, 'customerSkybillNumber' => 'TEST-COLIS-1', 'recipientRef' => 'TEST-COLIS-1', 'shipperRef' => 'TEST-COLIS-1', ), ), 
+            //     'skybillValue' => array (
+            //         0 => array ( 'bulkNumber' => '1', 'evtCode' => 'DC', 'productCode' => '01', 'shipDate' => '2023-03-14UTC10:47:35', 'shipHour' => 12, 'weight' => 10.2, 'weightUnit' => 'KGM', 'height' => 0, 'length' => 0, 'width' => 0, 'latitude' => NULL, 'longitude' => NULL, 'portCurrency' => NULL, 'portValue' => NULL, 'qualite' => NULL, 'source' => NULL, 'carrier' => NULL, 'skybillNumber' => NULL, 'skybillBackNumber' => NULL, 'labelNumber' => NULL, 'objectType' => 'MAR', 'service' => '0', 'skybillRank' => '1', ), 
+            //         1 => array ( 'bulkNumber' => '2', 'evtCode' => 'DC', 'productCode' => '01', 'shipDate' => '2023-03-14UTC10:47:35', 'shipHour' => 12, 'weight' => 10.2, 'weightUnit' => 'KGM', 'height' => 0, 'length' => 0, 'width' => 0, 'latitude' => NULL, 'longitude' => NULL, 'portCurrency' => NULL, 'portValue' => NULL, 'qualite' => NULL, 'source' => NULL, 'carrier' => NULL, 'skybillNumber' => NULL, 'skybillBackNumber' => NULL, 'labelNumber' => NULL, 'objectType' => 'MAR', 'service' => '0', 'skybillRank' => '1', ), ), 
+            //     'skybillParamsValue' => array ( 'mode' => 'THE1015', 'duplicata' => 'N', 'withReservation' => 0, ), 
+            //     'password' => '255562', 
+            //     'version' => '2', 
+            //     'modeRetour' => '1', 
+            //     'numberOfParcel' => 2, 
+            //     'multiParcel' => 'Y', 
+            // );
+            return $this->client->shippingMultiParcelV4($result);
         }
 }
