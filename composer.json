@@ -5,7 +5,7 @@
     "keywords": ["chronopost", "chronopost api", "chronopost shipping"],
     "license": "MIT",
     "homepage": "https://github.com/robinsaillard/chronopost-api",
-    "version": "1.0.3",
+    "version": "1.0.4",
     "authors": [
         {
             "name": "Robin Saillard",
