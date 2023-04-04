@@ -2,7 +2,6 @@
 
 namespace RS\ChronopostApi\Wsdl;
 
-use SoapClient;
 use RS\ChronopostApi\Client;
 
 class CreneauServiceWS extends Client {
@@ -14,8 +13,6 @@ class CreneauServiceWS extends Client {
     ) {
         parent::__construct(self::WSDL_CRENEAU_SERVICE);
     }
-
-    
 
 }
 

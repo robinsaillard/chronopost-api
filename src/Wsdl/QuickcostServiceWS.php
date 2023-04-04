@@ -2,7 +2,6 @@
 
 namespace RS\ChronopostApi\Wsdl;
 
-use SoapClient;
 use RS\ChronopostApi\Client;
 
 class QuickcostServiceWS extends Client {

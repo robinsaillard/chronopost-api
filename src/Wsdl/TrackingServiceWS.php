@@ -2,8 +2,6 @@
 
 namespace RS\ChronopostApi\Wsdl;
 
-use SoapClient;
-use DateTime;
 use RS\ChronopostApi\Client;
 
 

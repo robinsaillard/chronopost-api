@@ -2,8 +2,6 @@
 
 namespace RS\ChronopostApi\Wsdl;
 
-use DateTime;
-use SoapClient;
 use RS\ChronopostApi\Client;
 
 class PointRelaisServiceWS extends Client {
