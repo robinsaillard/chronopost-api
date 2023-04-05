@@ -2,6 +2,7 @@
 
 namespace RS\ChronopostApi\Wsdl;
 
+use DateTime;
 use RS\ChronopostApi\Client;
 
 class PointRelaisServiceWS extends Client {
@@ -11,18 +12,6 @@ class PointRelaisServiceWS extends Client {
     public function __construct(
         public int $accountNumber,
         public string $password,
-        public ?string $address = null,
-        public string $zipCode = null,
-        public string $city = null,
-        public string $countryCode = "FR",
-        public string $type = "T",
-        public string $productCode = "86",
-        public string $service = "L",
-        public ?float $weight = null,
-        public string $shippingDate = date('d/m/Y'),
-        public ?int $maxPointChronopost = 25,
-        public int $maxDistanceSearch = 10,
-        public int $holidayTolerant = 1,
         public string $language = "FR",
         public string $version = "2.0",
     ) {
@@ -38,7 +27,11 @@ class PointRelaisServiceWS extends Client {
      * @param ?float $weight
      * @param ?string $lang (FR, EN, DE, ES, IT...)
      */
-    public function find(string $countryCode, string $zipCode, string $city, string $address = null, float $weight = null, string $lang = "FR"): array
+    public function find(
+        string $countryCode, string $zipCode, string $city, string $shippingDate, string $address = null,
+        float $weight = null, string $type = "T", string $productCode = "86", 
+        string $service = "L", int $maxDistanceSearch = 10, int $holidayTolerant = 1, int $maxPointChronopost = 25 
+        )
     {
         $params = [
             'accountNumber' => $this->accountNumber,
@@ -47,15 +40,15 @@ class PointRelaisServiceWS extends Client {
             'zipCode' => $zipCode,
             'city' => $city,
             'countryCode' => $countryCode,
-            'type' => $this->type,
-            'productCode' => $this->productCode,
-            'service' => $this->service,
+            'type' => $type,
+            'productCode' => $productCode,
+            'service' => $service,
             'weight' => $weight,
-            'shippingDate' => $this->shippingDate,
-            'maxPointChronopost' => $this->maxPointChronopost,
-            'maxDistanceSearch' => $this->maxDistanceSearch,
-            'holidayTolerant' => $this->holidayTolerant,
-            'language' => $lang,
+            'shippingDate' => $shippingDate,
+            'maxPointChronopost' => $maxPointChronopost,
+            'maxDistanceSearch' => $maxDistanceSearch,
+            'holidayTolerant' => $holidayTolerant,
+            'language' => $this->language,
             'version' => $this->version,
         ];
 
