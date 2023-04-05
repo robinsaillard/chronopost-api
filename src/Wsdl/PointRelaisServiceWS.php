@@ -9,6 +9,12 @@ class PointRelaisServiceWS extends Client {
 
     const WSDL_POINT_RELAIS_SERVICE = "https://ws.chronopost.fr/recherchebt-ws-cxf/PointRelaisServiceWS?wsdl";
 
+    /**
+     * @param int $accountNumber
+     * @param string $password 
+     * @param string $language (FR, EN, DE, ES, IT...)
+     * @param string $version (2.0)
+     */
     public function __construct(
         public int $accountNumber,
         public string $password,
@@ -23,9 +29,15 @@ class PointRelaisServiceWS extends Client {
      * @param string $countryCode (FR, EN, DE, ES, IT...)
      * @param string $zipCode
      * @param string $city
+     * @param string $shippingDate
      * @param ?string $address
      * @param ?float $weight
-     * @param ?string $lang (FR, EN, DE, ES, IT...)
+     * @param ?string $type 
+     * @param ?string $productCode
+     * @param ?string $service
+     * @param ?int $maxDistanceSearch
+     * @param ?int $holidayTolerant
+     * @param ?int $maxPointChronopost
      */
     public function find(
         string $countryCode, string $zipCode, string $city, string $shippingDate, string $address = null,
