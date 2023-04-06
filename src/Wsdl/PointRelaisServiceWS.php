@@ -68,6 +68,18 @@ class PointRelaisServiceWS extends Client {
 
         return $response;
     }
+
+    public function findById(string $id) {
+        $params = [
+            'accountNumber' => $this->accountNumber,
+            'password' => $this->password,
+            'identifiant' => $id,
+        ];
+
+        $response = $this->client->rechercheDetailPointChronopost($params);
+
+        return $response;
+    }
 }
 
 
