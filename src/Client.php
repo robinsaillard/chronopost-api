@@ -8,7 +8,7 @@ abstract class Client {
     protected SoapClient $client;
     public function __construct(
         public ?string $wsdl = null,
-        public array $options = []
+        public array $options = ['trace' => 1]
     ) {
         $this->client = new SoapClient($wsdl, $options);
     }
@@ -41,6 +41,11 @@ abstract class Client {
     public function setOptions(array $options): void
     {
         $this->options = $options;
+    }
+
+    public function getLastRequest(): string
+    {
+        return $this->client->__getLastRequest();
     }
 
 }
