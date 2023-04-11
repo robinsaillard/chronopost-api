@@ -295,8 +295,8 @@ class ShippingServiceWS extends Client {
      */
 
     public function setSkybillValue(
-        string $bulkNumber = "1", string $evtCode = "DC", string $productCode = "01", DateTime $shipDate, int $shipHour = 12,
-        float $weight = 1.0, string $weightUnit = "KGM", float $height = 0.0, float $length = 0.0, float $width = 0.0,
+        float $weight = 1.0, string $bulkNumber = "1", string $evtCode = "DC", string $productCode = "01", DateTime $shipDate, 
+        int $shipHour = 12, string $weightUnit = "KGM", float $height = 0.0, float $length = 0.0, float $width = 0.0,
         string $codCurrency = "", int $codValue = 0, string $content1 = "", string $content2 = "", string $content3 = "",
         string $content4 = "", string $content5 = "", string $customsCurrency = "", int $customsValue = 0,
         string $insuredCurrency = "", int $insuredValue = 0, string $masterSkybillNumber = "", string $objectType = "",
