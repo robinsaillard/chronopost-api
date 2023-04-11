@@ -115,8 +115,8 @@ class ShippingServiceWS extends Client {
      */
     public function setShipperValue(
         string $shipperAdress1, string $shipperCity, string $shipperCivility, string $shipperCountry,
-        string $shipperEmail, string $shipperName, string $shipperPhone, int $shipperPreAlert = 0,
-        string $shipperZipCode, string $shipperAdress2 = "", string $shipperContactName = "",
+        string $shipperEmail, string $shipperName, string $shipperPhone, string $shipperZipCode,
+        int $shipperPreAlert = 0, string $shipperAdress2 = "", string $shipperContactName = "",
         string $shipperCountryName = "", string $shipperMobilePhone = "", string $shipperName2 = "",
         string $shipperType = "0") : self
     {
@@ -295,8 +295,8 @@ class ShippingServiceWS extends Client {
      */
 
     public function setSkybillValue(
-        string $bulkNumber = "1", string $evtCode = "DC", string $productCode = "01", DateTime $shipDate, int $shipHour,
-        float $weight, string $weightUnit = "KGM", float $height = 0.0, float $length = 0.0, float $width = 0.0,
+        string $bulkNumber = "1", string $evtCode = "DC", string $productCode = "01", DateTime $shipDate, int $shipHour = 12,
+        float $weight = 1.0, string $weightUnit = "KGM", float $height = 0.0, float $length = 0.0, float $width = 0.0,
         string $codCurrency = "", int $codValue = 0, string $content1 = "", string $content2 = "", string $content3 = "",
         string $content4 = "", string $content5 = "", string $customsCurrency = "", int $customsValue = 0,
         string $insuredCurrency = "", int $insuredValue = 0, string $masterSkybillNumber = "", string $objectType = "",
@@ -310,9 +310,9 @@ class ShippingServiceWS extends Client {
                 'shipHour' => $shipHour,
                 'weight' => $weight,
                 'weightUnit' => $weightUnit,
-                'height' => 0,
-                'length' => 0,
-                'width' => 0,
+                'height' => $height,
+                'length' => $length,
+                'width' => $width,
                 'latitude' => null,
                 'longitude' => null,
                 'portCurrency' => null,
