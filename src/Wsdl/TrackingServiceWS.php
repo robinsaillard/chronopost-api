@@ -38,6 +38,7 @@ class TrackingServiceWS extends Client {
             'dateDeposit' => $dateDeposit->format('d/m/Y'),
             'dateEndDeposit' => $dateEndDeposit->format('d/m/Y'),
             'parcelState' => $parcelState,
+            'sendersRef' => $sendersRef,
             'serviceCode' => $serviceCode
         ];
 
