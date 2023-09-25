@@ -392,7 +392,7 @@ class ShippingServiceWS extends Client {
          * @param ?string $multiParcel (N) [Y|N] Expédition multi colis
          * @return self
          */
-        public function setGeneral(string $password, string $modeRetour = "1", int $numberOfParcel = 1, string $version = "2.0", string $multiParcel = "N") {
+        public function setGeneral(string $password, string $modeRetour = "2", int $numberOfParcel = 1, string $version = "2.0", string $multiParcel = "N") {
             $this->password = $password;
             $this->modeRetour = $modeRetour;
             $this->numberOfParcel = $numberOfParcel;
