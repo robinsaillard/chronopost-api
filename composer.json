@@ -15,9 +15,9 @@
     "require": {
         "php": ">=8.0",
         "lib-libxml": "*",
-        "symfony/asset": "^4.0|^5.0|^6.0",
-        "symfony/framework-bundle": "^4.0|^5.0|^6.0",
-        "symfony/http-kernel": "^4.0|^5.0|^6.0",
+        "symfony/asset": "^4.0|^5.0|^6.0|^7.0",
+        "symfony/framework-bundle": "^4.0|^5.0|^6.0|^7.0",
+        "symfony/http-kernel": "^4.0|^5.0|^6.0|^7.0",
         "servo/fluidxml": "^1.21"
     },
     "autoload": {
