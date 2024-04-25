@@ -45,4 +45,14 @@ class TrackingServiceWS extends Client {
         return $this->client->trackSearch($params);
     }
 
+    public function trackSkyBill(string $skyBillNumber)
+    {
+        $params = [
+            'language' => $this->language,
+            'skybillNumber' => $skyBillNumber
+        ];
+
+        return $this->client->trackSkybillV2($params);
+    }
+
 }
