@@ -55,4 +55,16 @@ class TrackingServiceWS extends Client {
         return $this->client->trackSkybillV2($params);
     }
 
+    public function searchPOD(string $skyBillNumber, bool $pdf = true)
+    {
+        $params = [
+            'accountNumber' => $this->accountNumber,
+            'password' => $this->password,
+            'language' => $this->language,
+            'skybillNumber' => $skyBillNumber,
+            'pdf' => $pdf
+        ];
+
+        return $this->client->searchPOD($params);
+    }
 }
